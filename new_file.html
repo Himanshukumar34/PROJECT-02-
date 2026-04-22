@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypoMaster - Premium Typing Test</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: linear-gradient(135deg, #0f172a 0%, #1a1f3a 100%);
+  --card: #1e293b;
+  --card-light: #334155;
+  --text: #e2e8f0;
+  --text-secondary: #cbd5e1;
+  --accent: #0ea5e9;
+  --accent-light: #06b6d4;
+  --correct: #10b981;
+  --wrong: #ef4444;
+  --current: #fbbf24;
+  --gold: #fbbf24;
+  --border: #475569;
+}
+
+body.light {
+  --bg: linear-gradient(135deg, #f0f9ff 0%, #f8fafc 100%);
+  --card: #ffffff;
+  --card-light: #f1f5f9;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --border: #e2e8f0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-icon {
+  background: var(--card-light);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-icon:hover {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.1);
+}
+
+.container {
+  width: 100%;
+  max-width: 900px;
+}
+
+.card {
+  background: var(--card);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--border);
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.difficulty-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.diff-btn {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--card-light);
+  color: var(--text);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.diff-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.diff-btn:hover {
+  border-color: var(--accent);
+}
+
+.text-display {
+  background: var(--card-light);
+  padding: 25px;
+  border-radius: 12px;
+  line-height: 2;
+  font-size: 18px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  min-height: 120px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+.text-display span {
+  transition: all 0.05s ease;
+}
+
+.text-display span.correct {
+  color: var(--correct);
+  font-weight: 500;
+}
+
+.text-display span.wrong {
+  color: var(--wrong);
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+.text-display span.current {
+  color: var(--current);
+  background: rgba(251, 191, 36, 0.2);
+  animation: blink 1s infinite;
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+@keyframes blink {
+  50% { opacity: 0.7; }
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  border: 2px solid var(--border);
+  background: var(--card-light);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 16px;
+  font-family: 'Monaco', 'Courier New', monospace;
+  resize: none;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: var(--card-light);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-top: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--card-light);
+  border-radius: 3px;
+  margin-top: 15px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  width: 0%;
+  transition: width 0.1s linear;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+}
+
+.btn-secondary {
+  background: var(--card-light);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.leaderboard {
+  background: var(--card-light);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  margin-top: 20px;
+}
+
+.leaderboard-title {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-rank {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.leaderboard-score {
+  color: var(--correct);
+  font-weight: 600;
+}
+
+.result-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-modal.show {
+  display: flex;
+}
+
+.result-card {
+  background: var(--card);
+  padding: 40px;
+  border-radius: 16px;
+  max-width: 500px;
+  text-align: center;
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.result-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--gold), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.result-stat {
+  background: var(--card-light);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.result-stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.result-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 20px;
+  }
+  
+  .text-display {
+    font-size: 16px;
+    padding: 15px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <i class="fas fa-keyboard"></i> TypoMaster
+  </div>
+  <div class="controls">
+    <button class="btn-icon" onclick="toggleTheme()" title="Toggle Theme">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+    <button class="btn-icon" onclick="toggleSound()" title="Toggle Sound">
+      <i class="fas fa-volume-up" id="soundIcon"></i>
+    </button>
+  </div>
+</div>
+
+<div class="container">
+<div class="card">
+<div class="card-header">
+  <div class="card-title">
+    <i class="fas fa-edit"></i> Typing Challenge
+  </div>
+  <div class="difficulty-selector">
+    <button class="diff-btn active" onclick="setDifficulty(30)">Easy (30s)</button>
+    <button class="diff-btn" onclick="setDifficulty(60)">Normal (60s)</button>
+    <button class="diff-btn" onclick="setDifficulty(120)">Hard (120s)</button>
+  </div>
+</div>
+
+<div class="text-display" id="textDisplay"></div>
+<textarea id="input" placeholder="Click here and start typing..."></textarea>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Time Left</div>
+    <div class="stat-value" id="time">60</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">WPM</div>
+    <div class="stat-value" id="wpm">0</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Accuracy</div>
+    <div class="stat-value" id="accuracy">100%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Characters</div>
+    <div class="stat-value"><span id="charCount">0</span>/<span id="totalChars">0</span></div>
+  </div>
+</div>
+
+<div class="buttons-container">
+  <button class="btn btn-primary" id="startBtn" onclick="startTest()">
+    <i class="fas fa-play"></i> Start
+  </button>
+  <button class="btn btn-secondary" onclick="resetTest()">
+    <i class="fas fa-redo"></i> Reset
+  </button>
+</div>
+
+<div class="leaderboard">
+  <div class="leaderboard-title"><i class="fas fa-trophy"></i> Top Scores</div>
+  <div id="leaderboardList"></div>
+</div>
+</div>
+</div>
+
+<div class="result-modal" id="resultModal">
+  <div class="result-card">
+    <div class="result-title"><i class="fas fa-check-circle"></i> Test Complete!</div>
+    <div class="result-stats">
+      <div class="result-stat">
+        <div class="result-stat-label">Final WPM</div>
+        <div class="result-stat-value" id="resultWpm">0</div>
+      </div>
+      <div class="result-stat">
+        <div class="result-stat-label">Accuracy</div>
+        <div class="result-stat-value" id="resultAccuracy">0%</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="closeResultModal()">
+      <i class="fas fa-arrow-right"></i> Try Again
+    </button>
+  </div>
+</div>
+<script>
+const texts = [
+  "Practice makes a person perfect in their craft.",
+  "Typing speed improves with consistency and dedication.",
+  "JavaScript powers most modern web applications today.",
+  "Stay focused on your goals and keep learning daily.",
+  "Discipline beats motivation every single time.",
+  "Code is like humor it must be simple to understand.",
+  "Debugging is twice as hard as writing code itself.",
+  "Dream big and work hard to achieve your goals.",
+  "Small steps taken daily lead to big success later.",
+  "Consistency is the key to growth and improvement.",
+  "Learn something new every single day always.",
+  "Hard work beats talent when talent is not working.",
+  "Success comes with patience and hard work always.",
+  "Never give up on your goals no matter what happens.",
+  "Believe in yourself and your abilities completely.",
+  "Innovation distinguishes between a leader and follower.",
+  "The only way to do great work is to love what you do.",
+  "Life is what happens when you're busy making plans.",
+  "Technology is best when it brings people together.",
+  "Keep learning keep growing keep pushing forward always."
+];
+
+let maxTimer = 60;
+let timer = 60;
+let interval;
+let started = false;
+let currentText = "";
+let soundEnabled = true;
+let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+
+const display = document.getElementById("textDisplay");
+const input = document.getElementById("input");
+const resultModal = document.getElementById("resultModal");
+
+function loadText() {
+  currentText = texts[Math.floor(Math.random() * texts.length)];
+  display.innerHTML = currentText.split("").map(c => `<span>${c}</span>`).join("");
+  document.getElementById("totalChars").innerText = currentText.length;
+}
+
+function startTest() {
+  if (started) return;
+  started = true;
+  document.getElementById("startBtn").disabled = true;
+  document.getElementById("startBtn").textContent = "Running...";
+  
+  interval = setInterval(() => {
+    timer--;
+    document.getElementById("time").innerText = timer;
+    updateProgressBar();
+    
+    if (timer === 0) {
+      endTest();
+    }
+  }, 1000);
+  
+  playSound('start');
+}
+
+function updateProgressBar() {
+  const percentage = ((maxTimer - timer) / maxTimer) * 100;
+  document.getElementById("progressFill").style.width = percentage + "%";
+}
+
+input.addEventListener("input", () => {
+  if (!started && input.value.length > 0) {
+    startTest();
+  }
+  
+  const chars = display.querySelectorAll("span");
+  const typed = input.value.split("");
+  let correct = 0;
+
+  chars.forEach((char, i) => {
+    if (typed[i] == null) {
+      char.classList.remove("correct", "wrong", "current");
+    } else if (typed[i] === char.innerText) {
+      char.classList.add("correct");
+      char.classList.remove("wrong");
+      correct++;
+    } else {
+      char.classList.add("wrong");
+      char.classList.remove("correct");
+    }
+    if (i === typed.length) char.classList.add("current");
+    else char.classList.remove("current");
+  });
+
+  const timeElapsed = maxTimer - timer;
+  const wpm = timeElapsed > 0 ? Math.round((correct / 5) / (timeElapsed / 60)) : 0;
+  const accuracy = typed.length > 0 ? Math.round((correct / typed.length) * 100) : 100;
+
+  document.getElementById("wpm").innerText = wpm;
+  document.getElementById("accuracy").innerText = accuracy + "%";
+  document.getElementById("charCount").innerText = typed.length;
+});
+
+function endTest() {
+  clearInterval(interval);
+  const chars = display.querySelectorAll("span");
+  const typed = input.value.split("");
+  let correct = 0;
+
+  chars.forEach((char, i) => {
+    if (typed[i] !== null && typed[i] === char.innerText) {
+      correct++;
+    }
+  });
+
+  const timeElapsed = maxTimer - timer;
+  const wpm = timeElapsed > 0 ? Math.round((correct / 5) / (timeElapsed / 60)) : 0;
+  const accuracy = typed.length > 0 ? Math.round((correct / typed.length) * 100) : 100;
+
+  // Save to leaderboard
+  leaderboard.push({
+    wpm: wpm,
+    accuracy: accuracy,
+    date: new Date().toLocaleDateString()
+  });
+  leaderboard.sort((a, b) => b.wpm - a.wpm);
+  leaderboard = leaderboard.slice(0, 10);
+  localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+
+  showResultModal(wpm, accuracy);
+  updateLeaderboard();
+  playSound('end');
+  
+  input.disabled = true;
+}
+
+function showResultModal(wpm, accuracy) {
+  document.getElementById("resultWpm").innerText = wpm;
+  document.getElementById("resultAccuracy").innerText = accuracy + "%";
+  resultModal.classList.add("show");
+}
+
+function closeResultModal() {
+  resultModal.classList.remove("show");
+  resetTest();
+}
+
+function resetTest() {
+  clearInterval(interval);
+  timer = maxTimer;
+  started = false;
+  input.value = "";
+  input.disabled = false;
+  document.getElementById("time").innerText = timer;
+  document.getElementById("wpm").innerText = "0";
+  document.getElementById("accuracy").innerText = "100%";
+  document.getElementById("charCount").innerText = "0";
+  document.getElementById("startBtn").disabled = false;
+  document.getElementById("startBtn").textContent = "✎ Start";
+  document.getElementById("progressFill").style.width = "0%";
+  loadText();
+  input.focus();
+}
+
+function setDifficulty(seconds) {
+  if (!started) {
+    maxTimer = seconds;
+    timer = seconds;
+    document.getElementById("time").innerText = timer;
+    document.querySelectorAll(".diff-btn").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+    loadText();
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  const icon = document.getElementById("themeIcon");
+  icon.classList.toggle("fa-moon");
+  icon.classList.toggle("fa-sun");
+  localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+  const icon = document.getElementById("soundIcon");
+  icon.classList.toggle("fa-volume-up");
+  icon.classList.toggle("fa-volume-mute");
+  localStorage.setItem("sound", soundEnabled);
+}
+
+function playSound(type) {
+  if (!soundEnabled) return;
+  
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  
+  oscillator.connect(gain);
+  gain.connect(audioContext.destination);
+  
+  if (type === 'start') {
+    oscillator.frequency.value = 800;
+    gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.1);
+  } else if (type === 'end') {
+    oscillator.frequency.value = 1200;
+    gain.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.15);
+  }
+}
+
+function updateLeaderboard() {
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = leaderboard.map((entry, index) => `
+    <div class="leaderboard-item">
+      <span class="leaderboard-rank">#${index + 1}</span>
+      <span>${entry.date}</span>
+      <span class="leaderboard-score">${entry.wpm} WPM</span>
+    </div>
+  `).join("");
+}
+
+// Load theme preference
+if (localStorage.getItem("theme") === "light") {
+  document.body.classList.add("light");
+  document.getElementById("themeIcon").classList.remove("fa-moon");
+  document.getElementById("themeIcon").classList.add("fa-sun");
+}
+
+soundEnabled = localStorage.getItem("sound") !== "false";
+
+input.addEventListener("paste", e => e.preventDefault());
+
+// Keyboard shortcuts
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Enter") {
+    e.preventDefault();
+    if (started) {
+      endTest();
+    } else {
+      startTest();
+    }
+  }
+});
+
+loadText();
+updateLeaderboard();
+input.focus();
+</script>
+</body>
+</html>
