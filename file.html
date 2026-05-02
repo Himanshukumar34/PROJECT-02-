@@ -8,18 +8,34 @@
 <body>
 
 
+
 <div class="game">
-     If you want to go google <a href="https://chatgpt.com/"/> click here </a>
+    <div class="top-bar">
+        <a class="cool-link" href="https://chatgpt.com/" target="_blank">🤖 Try ChatGPT</a>
+    </div>
     <h1>🎯 Number Guessing Game</h1>
-    <p>Guess a number between <b>1 and 100</b></p>
-
-    <input type="number" id="guess" placeholder="Enter your guess">
-    <button onclick="checkGuess()">Check</button>
-  
-
+    <p class="subtitle">Guess a number between <b>1 and 100</b></p>
+    <div class="input-row">
+        <input type="number" id="guess" placeholder="Enter your guess" min="1" max="100">
+        <button onclick="checkGuess()">Check</button>
+    </div>
     <p id="message"></p>
+    <div class="scoreboard">
+        <span id="highscore-label">🏆 High Score: <span id="highscore">--</span></span>
+        <span id="attempts-label">🔢 Attempts: <span id="attempts">0</span></span>
+    </div>
 </div>
 
+<script>
+// Update high score and attempts on page load and after each guess
+function updateScoreboard() {
+    const highScore = localStorage.getItem('highScore') || '--';
+    document.getElementById('highscore').textContent = highScore;
+    document.getElementById('attempts').textContent = window.attempts || 0;
+}
+updateScoreboard();
+setInterval(updateScoreboard, 500);
+</script>
 <script src="script.js"></script>
 </body>
 </html>

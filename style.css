@@ -1,45 +1,126 @@
+
 body {
-    background-color: black;
+    background: linear-gradient(135deg, #1e1e2f 0%, #44278c 100%);
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
 }
 
 .game {
-    background: #44278c;
-    padding: 30px;
-    border-radius: 10px;
+    background: rgba(34, 34, 68, 0.95);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    padding: 40px 32px 32px 32px;
+    border-radius: 18px;
     text-align: center;
-    color: rgb(255, 255, 255);
-    width: 500px;
+    color: #fff;
+    width: 370px;
+    position: relative;
+    transition: box-shadow 0.3s;
+}
+.game:hover {
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.5);
 }
 
-input {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 100px;
-    border: 80px;
-    font-size: 16px;
+.top-bar {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+}
+
+.cool-link {
+    color: #ffb347;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: color 0.2s;
+}
+.cool-link:hover {
+    color: #fff200;
+    text-shadow: 0 0 8px #fff20099;
+}
+
+.subtitle {
+    color: #ffb347;
+    margin-bottom: 18px;
+    font-size: 1.1rem;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+input[type="number"] {
+    width: 120px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 2px solid #ffb347;
+    font-size: 1.1rem;
+    outline: none;
+    background: #2d2d4d;
+    color: #fff;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+input[type="number"]:focus {
+    border: 2px solid #fff200;
+    box-shadow: 0 0 8px #fff20055;
 }
 
 button {
-    padding: 10px 20px;
+    padding: 10px 24px;
     border: none;
-    border-radius: 100px;
-    background: #5317778d;
-    color: rgb(24, 23, 23);
-    font-size: 16px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
+    color: #2d2d4d;
+    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
+    box-shadow: 0 2px 8px 0 rgba(255, 179, 71, 0.15);
+    transition: background 0.2s, color 0.2s;
 }
-
 button:hover {
-    background: #131213;
+    background: linear-gradient(90deg, #fff200 0%, #ffb347 100%);
+    color: #44278c;
 }
 
 #message {
-    margin-top: 15px;
-    font-size: 16px;
+    margin-top: 18px;
+    font-size: 1.15rem;
+    min-height: 32px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+#message.success {
+    color: #00ffae;
+    text-shadow: 0 0 8px #00ffae55;
+}
+#message.error {
+    color: #ff4d4d;
+    text-shadow: 0 0 8px #ff4d4d55;
+}
+#message.hint {
+    color: #fff200;
+    text-shadow: 0 0 8px #fff20055;
+}
+
+.scoreboard {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    color: #ffb347;
+    background: #2d2d4d;
+    border-radius: 8px;
+    padding: 8px 18px;
+    box-shadow: 0 2px 8px 0 rgba(255, 179, 71, 0.08);
+}
+
+body.win {
+    background: linear-gradient(135deg, #00ffae 0%, #ffb347 100%) !important;
+    transition: background 0.7s;
 }
